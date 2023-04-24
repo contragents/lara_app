@@ -10,3 +10,16 @@ services:
       - "8000:8000"
     volumes:
       - .:/var/www/html
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: php artisan queue:work
+    restart: always
