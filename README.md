@@ -2,7 +2,7 @@ To check how this stuff works you can visit http://xn--d1aiwkc2d.club:8000/ .
 There are links for two Jobs dispatching. 
 One Job lasts for 60 seconds and another one lasts for 30 seconds.
 On the main page you can monitor the state of Jobs' Queue by refreshing the page.
-172.18.0.1
+
 The task:
 We need to implement a custom queue management module in the Laravel framework.
 No 3rd party libraries should be used.
