@@ -15,51 +15,42 @@ use Illuminate\Queue\Events\JobProcessing;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
+        // Cleaning statistics on queue looping
         Event::listen(
             function (Looping $event) {
-                Redis::connection()->del(
-                    TestQueueManager::QUEUE_STATUS_KEY
-                );
+                TestQueueManager::registerQueueEvent(TestQueueManager::QUEUE_EVENTS['Looping']);
             }
         );
 
+        // Job queued event
         Event::listen(
             function (JobQueued $event) {
-                Redis::connection()->hset(
-                    TestQueueManager::QUEUE_STATUS_KEY,
-                    $event->id,
-                    json_encode(['status' => 'Queued'])
-                );
+                TestQueueManager::registerQueueEvent(TestQueueManager::QUEUE_EVENTS['Queued'], $event->id);
             }
         );
 
+        // Job processing event
         Queue::before(
             function (JobProcessing $event) {
-                Redis::connection()->hset(
-                    TestQueueManager::QUEUE_STATUS_KEY,
-                    $event->job->getJobId(),
-                    json_encode(['status' => 'Processing'])
+                TestQueueManager::registerQueueEvent(
+                    TestQueueManager::QUEUE_EVENTS['Processing'],
+                    $event->job->getJobId()
                 );
             }
         );
 
+        // Job processed event
         Queue::after(
             function (JobProcessed $event) {
-                Redis::connection()->hdel(
-                    TestQueueManager::QUEUE_STATUS_KEY,
+                TestQueueManager::registerQueueEvent(
+                    TestQueueManager::QUEUE_EVENTS['Processed'],
                     $event->job->getJobId()
                 );
             }

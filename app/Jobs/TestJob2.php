@@ -23,7 +23,7 @@ class TestJob2 implements ShouldQueue
 
     public function handle()
     {
-        sleep(60);
+        sleep(30);
     }
 
 }

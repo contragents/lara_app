@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('queue_status');//view('welcome');
 });
 
-Route::get('/queue_status', [Controller::class, 'queue_status']);
+Route::get('/queue_status', [Controller::class, 'queue_status'])->name('queue_status');
 
-Route::get('/run_job/{taskId}', [Controller::class, 'run_job']);
+Route::get('/run_job/{taskId}', [Controller::class, 'run_job'])->name('run_job');
